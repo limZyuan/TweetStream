@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-Time Tweet Stream</title>
+  </head>
+  <body>
+    <h1>Real-Time Tweets!</h1>
+    <div id="tweetStream"></div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
+      integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const socket = io();
+      socket.on("connect", () => {
+        console.log("Connected to server...");
+      });
+
+      socket.on("tweet", (tweet) => {
+        const tweetStream = document.querySelector("#tweetStream");
+
+        const tweetData = {
+          id: tweet.data.id,
+          text: tweet.data.text,
+          username: `@${tweet.includes.users[0].username}`,
+        };
+
+        const tweetEl = document.createElement("div");
+        tweetEl.innerHTML = `
+        <div>
+        <div>ID: ${tweetData.id}</div>
+        <div>Message: ${tweetData.text}</div>
+        <div>User: ${tweetData.username}</div>
+        </div>
+        <br/>
+        `;
+
+        tweetStream.append(tweetEl);
+      });
+    </script>
+  </body>
+</html>
